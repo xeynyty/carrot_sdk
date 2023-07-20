@@ -1,25 +1,25 @@
 use crate::utils::Work;
-use bincode;
 use bincode::{Decode, Encode};
 use crate::data::Data;
 
 #[derive(Encode, Decode, Debug, PartialEq, Clone)]
-pub struct WriteReq {
+pub struct Request {
     work: Work,
     key: Option<u32>,
     data: Data,
     iat: u64
 }
 
-impl WriteReq {
+impl Request {
     pub fn new() -> Self {
         Self {
-            work: Work::Write,
+            work: Work::None,
             key: None,
             data: Data::UNumber(0),
             iat: 0,
         }
     }
+
     pub fn set_key(self, key: Option<u32>) -> Self {
         Self {
             key, ..self
@@ -28,6 +28,22 @@ impl WriteReq {
     pub fn set_iat(self, iat: u64) -> Self {
         Self {
             iat, ..self
+        }
+    }
+
+    pub fn write(self) -> Self {
+        Self {
+            work: Work::Write, ..self
+        }
+    }
+    pub fn read(self) -> Self {
+        Self {
+            work: Work::Read, ..self
+        }
+    }
+    pub fn remove(self) -> Self {
+        Self {
+            work: Work::Remove, ..self
         }
     }
 
@@ -53,7 +69,7 @@ pub trait SetData<T> {
 }
 
 // Integer
-impl SetData<i64> for WriteReq {
+impl SetData<i64> for Request {
     fn set_data(self, data: i64) -> Self {
         Self {
             data: Data::INumber(data),
@@ -61,7 +77,7 @@ impl SetData<i64> for WriteReq {
         }
     }
 }
-impl SetData<i32> for WriteReq {
+impl SetData<i32> for Request {
     fn set_data(self, data: i32) -> Self {
         Self {
             data: Data::INumber(data as i64),
@@ -71,7 +87,7 @@ impl SetData<i32> for WriteReq {
 }
 
 // Unsigned integer
-impl SetData<u64> for WriteReq {
+impl SetData<u64> for Request {
     fn set_data(self, data: u64) -> Self {
         Self {
             data: Data::UNumber(data),
@@ -79,7 +95,7 @@ impl SetData<u64> for WriteReq {
         }
     }
 }
-impl SetData<u32> for WriteReq {
+impl SetData<u32> for Request {
     fn set_data(self, data: u32) -> Self {
         Self {
             data: Data::UNumber(data as u64),
@@ -89,7 +105,7 @@ impl SetData<u32> for WriteReq {
 }
 
 // String and &str
-impl SetData<String> for WriteReq {
+impl SetData<String> for Request {
     fn set_data(self, data: String) -> Self {
         Self {
             data: Data::UTF8(data),
@@ -97,7 +113,7 @@ impl SetData<String> for WriteReq {
         }
     }
 }
-impl SetData<&str> for WriteReq {
+impl SetData<&str> for Request {
     fn set_data(self, data: &str) -> Self {
         Self {
             data: Data::UTF8(data.into()),
@@ -106,21 +122,21 @@ impl SetData<&str> for WriteReq {
     }
 }
 
-impl Default for WriteReq {
+impl Default for Request {
     fn default() -> Self {
-        WriteReq::new()
+        Request::new()
     }
 }
 
-impl TryFrom<Vec<u8>> for WriteReq {
+impl TryFrom<Vec<u8>> for Request {
     type Error = bincode::error::DecodeError;
 
     fn try_from(value: Vec<u8>) -> Result<Self, Self::Error> {
-        let (res, _len): (WriteReq, usize) = bincode::decode_from_slice(&value, bincode::config::standard())?;
+        let (res, _len): (Request, usize) = bincode::decode_from_slice(&value, bincode::config::standard())?;
         Ok(res)
     }
 }
-impl TryInto<Vec<u8>> for WriteReq {
+impl TryInto<Vec<u8>> for Request {
     type Error = bincode::error::EncodeError;
 
     fn try_into(self) -> Result<Vec<u8>, Self::Error> {
