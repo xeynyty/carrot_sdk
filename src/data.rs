@@ -5,7 +5,8 @@ use bincode::{Decode, Encode};
 pub enum Data {
     INumber(i64),
     UNumber(u64),
-    UTF8(String)
+    UTF8(String),
+    ByteArray(Vec<u8>)
 }
 
 impl TryInto<i64> for Data {
@@ -35,6 +36,17 @@ impl TryInto<String> for Data {
 
     fn try_into(self) -> Result<String, Self::Error> {
         if let Data::UTF8(data) = self {
+            return Ok(data)
+        }
+        Err(Error::new(ErrorKind::NotFound, "Bad data"))
+    }
+}
+
+impl TryInto<Vec<u8>> for Data {
+    type Error = Error;
+
+    fn try_into(self) -> Result<Vec<u8>, Self::Error> {
+        if let Data::ByteArray(data) = self {
             return Ok(data)
         }
         Err(Error::new(ErrorKind::NotFound, "Bad data"))
