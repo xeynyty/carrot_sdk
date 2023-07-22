@@ -6,7 +6,8 @@ pub enum Data {
     INumber(i64),
     UNumber(u64),
     UTF8(String),
-    ByteArray(Vec<u8>)
+    ByteArray(Vec<u8>),
+    None
 }
 
 impl TryInto<i64> for Data {
