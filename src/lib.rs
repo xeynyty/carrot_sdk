@@ -4,5 +4,5 @@ pub use request::{Request, SetData};
 mod result;
 
 pub mod data;
-mod utils;
+pub mod utils;
 mod tests;
