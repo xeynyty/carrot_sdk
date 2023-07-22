@@ -143,3 +143,11 @@ impl TryInto<Vec<u8>> for Request {
         bincode::encode_to_vec(self, bincode::config::standard())
     }
 }
+impl TryFrom<&[u8]> for Request {
+    type Error = bincode::error::DecodeError;
+
+    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+        let (res, _len): (Request, usize) = bincode::decode_from_slice(value, bincode::config::standard())?;
+        Ok(res)
+    }
+}
