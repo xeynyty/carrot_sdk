@@ -1,7 +1,7 @@
 mod request;
 pub use request::{Request, SetData};
 
-mod result;
+pub mod result;
 
 pub mod data;
 pub mod utils;

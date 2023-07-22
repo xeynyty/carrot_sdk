@@ -1,11 +1,11 @@
 use crate::data::Data;
 
-pub struct Result {
+pub struct Response {
     key: u32,
     data: Option<Data>,
 }
 
-impl Result {
+impl Response {
     pub fn new(key: u32, data: Option<Data>) -> Self {
         Self {
             key, data
