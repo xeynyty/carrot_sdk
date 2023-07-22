@@ -2,11 +2,11 @@ use crate::data::Data;
 
 pub struct Response {
     key: u32,
-    data: Option<Data>,
+    data: Data,
 }
 
 impl Response {
-    pub fn new(key: u32, data: Option<Data>) -> Self {
+    pub fn new(key: u32, data: Data) -> Self {
         Self {
             key, data
         }
@@ -14,7 +14,7 @@ impl Response {
     pub fn key(&self) -> u32 {
         self.key
     }
-    pub fn data(&self) -> Option<Data> {
+    pub fn data(&self) -> Data {
         self.data.clone()
     }
 }
