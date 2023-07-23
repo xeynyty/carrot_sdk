@@ -33,7 +33,7 @@ impl TryFrom<&[u8]> for Response {
     type Error = bincode::error::DecodeError;
 
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-        let (res, _len): (Response, usize) = bincode::decode_from_slice(&value, bincode::config::standard())?;
+        let (res, _len): (Response, usize) = bincode::decode_from_slice(value, bincode::config::standard())?;
         Ok(res)
     }
 }
