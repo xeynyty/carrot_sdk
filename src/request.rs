@@ -122,6 +122,16 @@ impl SetData<&str> for Request {
     }
 }
 
+// Vec<u8>
+impl SetData<Vec<u8>> for Request {
+    fn set_data(self, data: Vec<u8>) -> Self {
+        Self {
+            data: Data::ByteArray(data),
+            ..self
+        }
+    }
+}
+
 impl Default for Request {
     fn default() -> Self {
         Request::new()
